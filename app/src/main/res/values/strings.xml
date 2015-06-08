@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Media Player</string>
+
+    <!--MainActivity-->
+    <string name="fixed_aspect_ratio">Fixed Aspect Ratio</string>
+    <string name="adaptive_aspect_ratio">Adaptive Aspect Ratio</string>
+    <string name="fixed_aspect_ratio_intagram">Fixed Aspect Ratio Instagram</string>
+    <string name="main_description">This is a demonstration of MediaPlayer Android API.</string>
+
+    <!--FixedAspectRatioActivity-->
+    <string name="title_activity_fixed_aspect_ratio">Fixed Aspect Ratio</string>
+    <string name="fixed_aspect_ratio_description">Video display area is fixed - streamed video's aspect ratio changes to video displayed area so video is distorted.</string>
+
+    <!--AdaptiveAspectRatioActivity-->
+    <string name="title_activity_adaptive_aspect_ratio">Adaptive Aspect Ratio</string>
+    <string name="adaptive_aspect_ratio_description">Video display area is adaptive - the height changes to same height as video height.</string>
+
+    <!--FixedAspectRatioInstagramActivity-->
+    <string name="title_activity_fixed_aspect_ratio_instagram">Fixed Aspect Ratio Instagram</string>
+
+    <!--General-->
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+</resources>
