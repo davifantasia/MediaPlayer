@@ -28,13 +28,6 @@
                 android:contentDescription="@null"
                 android:src="@drawable/big_buck" />
 
-            <!--<ProgressBar
-                android:id="@+id/progress_bar"
-                style="@android:style/Widget.ProgressBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />-->
-
             <ImageView
                 android:id="@+id/video_loading_image_view"
                 android:layout_width="20dp"
@@ -50,23 +43,6 @@
                 android:contentDescription="@null"
                 android:background="@color/black_transparent"/>
         </RelativeLayout>
-
-        <!--<RelativeLayout
-            android:id="@+id/controls_relative_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/video_relative_layout"
-            android:layout_marginTop="10dp">
-
-            <ImageButton
-                android:id="@+id/play_pause_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:tag="@string/pause"
-                android:contentDescription="@null"
-                android:src="@android:drawable/ic_media_pause" />
-        </RelativeLayout>-->
 
         <TextView
             android:id="@+id/description"

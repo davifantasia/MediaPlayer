@@ -11,7 +11,10 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+
+import com.davifantasia.mediaplayer.utils.MyMediaPlayer;
 
 import java.io.IOException;
 
@@ -20,12 +23,14 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
 
     private final static String TAG = FixedAspectRatioInstagramActivity.class.getSimpleName();
 
+    private AlphaAnimation mFadeInAnim;
+    private AlphaAnimation mFadeOutAnim;
     private ImageView mVideoPictureImageView;
     private ImageView mVideoLoadingImageView;
     private AnimationDrawable mVideoLoadingAnimation;
     private SurfaceView mVideoSurfaceView;
     private SurfaceHolder mVideoSurfaceHolder;
-    private MediaPlayer mMediaPlayer;
+    private MyMediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +41,21 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
     }
 
     private void init() {
+        initAnims();
+        initViews();
+    }
+
+    private  void initAnims() {
+        mFadeInAnim = new AlphaAnimation(0.0f, 1.0f);
+        mFadeInAnim.setDuration(200);
+        mFadeOutAnim = new AlphaAnimation(1.0f, 0.0f);
+        mFadeOutAnim.setDuration(200);
+    }
+
+    private void initViews() {
         mVideoPictureImageView = (ImageView) findViewById(R.id.video_picture_image_view);
         initVideoLoadingImageView();
-        mVideoSurfaceView = (SurfaceView) findViewById(R.id.video_surface_view);
+        initSurfaceView();
         initVideoSurfaceHolder();
     }
 
@@ -46,6 +63,22 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
         mVideoLoadingImageView = (ImageView) findViewById(R.id.video_loading_image_view);
         mVideoLoadingImageView.setBackgroundResource(R.drawable.video_loading);
         mVideoLoadingAnimation = (AnimationDrawable) mVideoLoadingImageView.getBackground();
+    }
+
+    private void initSurfaceView() {
+        mVideoSurfaceView = (SurfaceView) findViewById(R.id.video_surface_view);
+        mVideoSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMediaPlayer.isPlaying()) {
+                    if (mMediaPlayer.isMute()) {
+                        mMediaPlayer.unMute();
+                    } else {
+                        mMediaPlayer.mute();
+                    }
+                }
+            }
+        });
     }
 
     private void initVideoSurfaceHolder() {
@@ -73,22 +106,51 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
         String url = getResources().getString(R.string.big_buck_bunny_url);
 
         try {
-            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer = new MyMediaPlayer();
             mMediaPlayer.setDisplay(mVideoSurfaceHolder);
             mMediaPlayer.setDataSource(url);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.setVolume(0.0f, 0.0f);
+            mMediaPlayer.setLooping(true);
             mMediaPlayer.setOnInfoListener(
                     new MediaPlayer.OnInfoListener() {
                         @Override
                         public boolean onInfo(MediaPlayer mp, int what, int extra) {
+
                             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                                // Fade in video loading gif.
                                 mVideoLoadingImageView.setVisibility(View.VISIBLE);
+                                if (mVideoLoadingImageView.getAlpha() == 0) {
+                                    mVideoLoadingImageView.startAnimation(mFadeInAnim);
+                                }
                             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                                // Fade out video loading gif.
+                                if (mVideoLoadingImageView.getAlpha() == 1) {
+                                    mVideoLoadingImageView.startAnimation(mFadeOutAnim);
+                                }
                                 mVideoLoadingImageView.setVisibility(View.GONE);
+
+                                // Fade out video picture.
                                 if (mVideoPictureImageView.getVisibility() == View.VISIBLE) {
+                                    mVideoPictureImageView.startAnimation(mFadeOutAnim);
                                     mVideoPictureImageView.setVisibility(View.GONE);
                                 }
                             }
+
+                            // NOTE: Actual Instagram implementation as Instagram video does not buffer.
+//                            if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+//                                if (mVideoLoadingImageView.getAlpha() == 1) {
+//                                    mVideoLoadingImageView.startAnimation(mFadeOutAnim);
+//                                }
+//                                mVideoLoadingImageView.setVisibility(View.GONE);
+//
+//                                // Fade out video picture.
+//                                if (mVideoPictureImageView.getVisibility() == View.VISIBLE) {
+//                                    mVideoPictureImageView.startAnimation(mFadeOutAnim);
+//                                    mVideoPictureImageView.setVisibility(View.GONE);
+//                                }
+//                            }
+
                             return false;
                         }
                     }

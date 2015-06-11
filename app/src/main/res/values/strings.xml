@@ -20,6 +20,7 @@
     <string name="fixed_aspect_ratio_instagram_description">Video display area is fixed - streamed INSTAGRAM videos.</string>
 
     <!--General-->
+    <!--<string name="big_buck_bunny_url">http://igcdn-videos-f-1-a.akamaihd.net/hphotos-ak-xaf1/t50.2886-16/11417197_585146898294981_1397931315_n.mp4</string>-->
     <string name="big_buck_bunny_url">http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4</string>
 
     <string name="play">Play</string>
