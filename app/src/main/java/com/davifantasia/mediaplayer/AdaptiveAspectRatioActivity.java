@@ -65,7 +65,7 @@ public class AdaptiveAspectRatioActivity extends AppCompatActivity {
     }
 
     private void initMediaPlayer() {
-        String url = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        String url = getResources().getString(R.string.big_buck_bunny_url);
 
         try {
             mMediaPlayer = new MediaPlayer();

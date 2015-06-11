@@ -1,5 +1,6 @@
 package com.davifantasia.mediaplayer;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -10,8 +11,7 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 
 import java.io.IOException;
 
@@ -20,10 +20,11 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
 
     private final static String TAG = FixedAspectRatioInstagramActivity.class.getSimpleName();
 
-    private ProgressBar mProgressBar;
+    private ImageView mVideoPictureImageView;
+    private ImageView mVideoLoadingImageView;
+    private AnimationDrawable mVideoLoadingAnimation;
     private SurfaceView mVideoSurfaceView;
     private SurfaceHolder mVideoSurfaceHolder;
-    private ImageButton mPlayPauseImageButton;
     private MediaPlayer mMediaPlayer;
 
     @Override
@@ -35,10 +36,16 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
     }
 
     private void init() {
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mVideoPictureImageView = (ImageView) findViewById(R.id.video_picture_image_view);
+        initVideoLoadingImageView();
         mVideoSurfaceView = (SurfaceView) findViewById(R.id.video_surface_view);
         initVideoSurfaceHolder();
-        initPlayPauseImageButton();
+    }
+
+    private void initVideoLoadingImageView() {
+        mVideoLoadingImageView = (ImageView) findViewById(R.id.video_loading_image_view);
+        mVideoLoadingImageView.setBackgroundResource(R.drawable.video_loading);
+        mVideoLoadingAnimation = (AnimationDrawable) mVideoLoadingImageView.getBackground();
     }
 
     private void initVideoSurfaceHolder() {
@@ -46,7 +53,6 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
         mVideoSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                mProgressBar.setVisibility(View.VISIBLE);
                 initMediaPlayer();
             }
 
@@ -64,7 +70,7 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
     }
 
     private void initMediaPlayer() {
-        String url = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        String url = getResources().getString(R.string.big_buck_bunny_url);
 
         try {
             mMediaPlayer = new MediaPlayer();
@@ -76,15 +82,23 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
                         @Override
                         public boolean onInfo(MediaPlayer mp, int what, int extra) {
                             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                                mProgressBar.setVisibility(View.VISIBLE);
+                                mVideoLoadingImageView.setVisibility(View.VISIBLE);
                             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                                mProgressBar.setVisibility(View.GONE);
+                                mVideoLoadingImageView.setVisibility(View.GONE);
+                                if (mVideoPictureImageView.getVisibility() == View.VISIBLE) {
+                                    mVideoPictureImageView.setVisibility(View.GONE);
+                                }
                             }
                             return false;
                         }
                     }
             );
-            mMediaPlayer.setOnPreparedListener(new MyMediaPlayerOnPreparedListener());
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
             mMediaPlayer.prepareAsync();
 
 
@@ -97,57 +111,15 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
         }
     }
 
-    private class MyMediaPlayerOnPreparedListener implements MediaPlayer.OnPreparedListener {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            // Start video.
-            mProgressBar.setVisibility(View.GONE);
-            mMediaPlayer.start();
-            mPlayPauseImageButton.setEnabled(true);
-        }
-    }
-
-    private void initPlayPauseImageButton() {
-        mPlayPauseImageButton = (ImageButton) findViewById(R.id.play_pause_image_button);
-        mPlayPauseImageButton.setEnabled(false);
-        mPlayPauseImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mPlayPauseImageButton.getTag().equals(getResources().getString(R.string.play))) {
-                    Log.d(TAG, "It is PLAY button.");
-
-                    if (!mMediaPlayer.isPlaying()) {
-                        Log.d(TAG, "Start PLAY process.");
-                        // Change to play.
-                        playVideo();
-                    }
-                } else {
-                    Log.d(TAG, "It is PAUSE button.");
-
-                    if (mMediaPlayer.isPlaying()) {
-                        Log.d(TAG, "Start PAUSE process.");
-                        // Change to pause.
-                        pauseVideo();
-                    }
-                }
-            }
-        });
-    }
-
     private void playVideo() {
         if (mMediaPlayer != null) {
             mMediaPlayer.start();
-            mPlayPauseImageButton.setTag(getResources().getString(R.string.pause));
-            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
     private void pauseVideo() {
         if (mMediaPlayer != null) {
             mMediaPlayer.pause();
-            mPlayPauseImageButton.setTag(getResources().getString(R.string.play));
-            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_play);
         }
     }
 
@@ -178,6 +150,14 @@ public class FixedAspectRatioInstagramActivity extends AppCompatActivity {
         super.onResume();
 
         playVideo();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus)
+            mVideoLoadingAnimation.start();
     }
 
     @Override

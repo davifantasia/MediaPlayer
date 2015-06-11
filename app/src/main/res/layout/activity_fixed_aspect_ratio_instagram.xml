@@ -16,17 +16,42 @@
             <SurfaceView
                 android:id="@+id/video_surface_view"
                 android:layout_width="fill_parent"
-                android:layout_height="200dp" />
+                android:layout_height="500dp" />
 
-            <ProgressBar
+            <ImageView
+                android:id="@+id/video_picture_image_view"
+                android:layout_width="fill_parent"
+                android:layout_height="500dp"
+                android:adjustViewBounds="true"
+                android:scaleType="center"
+                android:background="@android:color/darker_gray"
+                android:contentDescription="@null"
+                android:src="@drawable/big_buck" />
+
+            <!--<ProgressBar
                 android:id="@+id/progress_bar"
                 style="@android:style/Widget.ProgressBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true" />-->
+
+            <ImageView
+                android:id="@+id/video_loading_image_view"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:contentDescription="@null"
+                android:background="@color/black_transparent"/>
         </RelativeLayout>
 
-        <RelativeLayout
+        <!--<RelativeLayout
             android:id="@+id/controls_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,13 +66,13 @@
                 android:tag="@string/pause"
                 android:contentDescription="@null"
                 android:src="@android:drawable/ic_media_pause" />
-        </RelativeLayout>
+        </RelativeLayout>-->
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/controls_relative_layout"
+            android:layout_below="@+id/video_relative_layout"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:gravity="center"
