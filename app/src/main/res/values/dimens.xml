@@ -5,4 +5,5 @@
 
     <!--MainActivity-->
     <dimen name="button_margin">10dp</dimen>
+    <dimen name="button_width">250dp</dimen>
 </resources>

@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mFixedAspectRatioButton;
     private Button mAdaptiveAspectRatioButton;
     private Button mFixedAspectRatioInstagramButton;
+    private Button mLiveStreamButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FixedAspectRatioInstagramActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mLiveStreamButton = (Button) findViewById(R.id.live_stream_button);
+        mLiveStreamButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LiveStreamActivity.class);
                 startActivity(intent);
             }
         });
