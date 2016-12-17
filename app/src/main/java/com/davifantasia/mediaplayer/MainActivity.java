@@ -6,61 +6,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private Button mFixedAspectRatioButton;
-    private Button mAdaptiveAspectRatioButton;
-    private Button mFixedAspectRatioInstagramButton;
-    private Button mLiveStreamButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        init();
     }
 
-    private void init() {
-        mAdaptiveAspectRatioButton = (Button) findViewById(R.id.adaptive_aspect_ratio_button);
-        mAdaptiveAspectRatioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AdaptiveAspectRatioActivity.class);
-                startActivity(intent);
-            }
-        });
+    public void onFixedAspectRatioButtonClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, FixedAspectRatioActivity.class);
+        startActivity(intent);
+    }
 
-        mFixedAspectRatioButton = (Button) findViewById(R.id.fixed_aspect_ratio_button);
-        mFixedAspectRatioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FixedAspectRatioActivity.class);
-                startActivity(intent);
-            }
-        });
+    public void onAdaptiveAspectRatioButtonClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, AdaptiveAspectRatioActivity.class);
+        startActivity(intent);
+    }
 
-        mFixedAspectRatioInstagramButton = (Button) findViewById(R.id.fixed_aspect_ratio_instagram_button);
-        mFixedAspectRatioInstagramButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FixedAspectRatioInstagramActivity.class);
-                startActivity(intent);
-            }
-        });
+    public void onFixedAspectRatioInstagramButtonClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, FixedAspectRatioInstagramActivity.class);
+        startActivity(intent);
+    }
 
-        mLiveStreamButton = (Button) findViewById(R.id.live_stream_button);
-        mLiveStreamButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LiveStreamActivity.class);
-                startActivity(intent);
-            }
-        });
-
+    public void onLiveStreamButtonClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, LiveStreamActivity.class);
+        startActivity(intent);
     }
 
     @Override

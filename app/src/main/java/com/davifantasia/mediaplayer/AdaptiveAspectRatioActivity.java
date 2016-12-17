@@ -217,8 +217,10 @@ public class AdaptiveAspectRatioActivity extends AppCompatActivity {
     protected void onStop() {
         Log.d(TAG, "Entered onStop().");
 
-        mMediaPlayer.reset();
-        mMediaPlayer = null;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
+            mMediaPlayer = null;
+        }
 
         super.onStop();
     }

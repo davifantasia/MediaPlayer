@@ -43,57 +43,60 @@ public class FixedAspectRatioActivity extends AppCompatActivity {
 
     private void initVideoSurfaceHolder() {
         mVideoSurfaceHolder = mVideoSurfaceView.getHolder();
-        mVideoSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                mProgressBar.setVisibility(View.VISIBLE);
-                initMediaPlayer();
-            }
+        mVideoSurfaceHolder.addCallback(new MySurfaceHolderCallback());
+    }
 
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    private class MySurfaceHolderCallback implements  SurfaceHolder.Callback {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            initMediaPlayer();
+        }
 
-            }
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
+        }
 
-            }
-        });
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
 
+        }
     }
 
     private void initMediaPlayer() {
-        String url = getResources().getString(R.string.big_buck_bunny_url);
-
         try {
-            mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setDisplay(mVideoSurfaceHolder);
-            mMediaPlayer.setDataSource(url);
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setOnInfoListener(
-                    new MediaPlayer.OnInfoListener() {
-                        @Override
-                        public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                                mProgressBar.setVisibility(View.VISIBLE);
-                            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                                mProgressBar.setVisibility(View.GONE);
-                            }
-                            return false;
-                        }
-                    }
-            );
-            mMediaPlayer.setOnPreparedListener(new MyMediaPlayerOnPreparedListener());
-            mMediaPlayer.prepareAsync();
-
-
+            initMediaPlayerWithinTry();
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Problem with url string.");
 
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initMediaPlayerWithinTry() throws IllegalArgumentException, IOException {
+        String url = getResources().getString(R.string.big_buck_bunny_url);
+
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setDisplay(mVideoSurfaceHolder);
+        mMediaPlayer.setDataSource(url);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setOnInfoListener(new MyMediaPlayerOnInfoListener());
+        mMediaPlayer.setOnPreparedListener(new MyMediaPlayerOnPreparedListener());
+        mMediaPlayer.prepareAsync();
+    }
+
+    private class MyMediaPlayerOnInfoListener implements MediaPlayer.OnInfoListener {
+        @Override
+        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                mProgressBar.setVisibility(View.VISIBLE);
+            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                mProgressBar.setVisibility(View.GONE);
+            }
+            return false;
         }
     }
 
@@ -110,44 +113,37 @@ public class FixedAspectRatioActivity extends AppCompatActivity {
     private void initPlayPauseImageButton() {
         mPlayPauseImageButton = (ImageButton) findViewById(R.id.play_pause_image_button);
         mPlayPauseImageButton.setEnabled(false);
-        mPlayPauseImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mPlayPauseImageButton.getTag().equals(getResources().getString(R.string.play))) {
-                    Log.d(TAG, "It is PLAY button.");
-
-                    if (!mMediaPlayer.isPlaying()) {
-                        Log.d(TAG, "Start PLAY process.");
-                        // Change to play.
-                        playVideo();
-                    }
-                } else {
-                    Log.d(TAG, "It is PAUSE button.");
-
-                    if (mMediaPlayer.isPlaying()) {
-                        Log.d(TAG, "Start PAUSE process.");
-                        // Change to pause.
-                        pauseVideo();
-                    }
-                }
-            }
-        });
+        mPlayPauseImageButton.setOnClickListener(new PlayPauseOnClickListener());
     }
 
-    private void playVideo() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.start();
-            mPlayPauseImageButton.setTag(getResources().getString(R.string.pause));
-            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_pause);
+    private class PlayPauseOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (mPlayPauseImageButton.getTag().equals(getResources().getString(R.string.play))) {
+                Log.d(TAG, "It is PLAY button.");
+
+                playVideoIfNotPlaying();
+            } else {
+                Log.d(TAG, "It is PAUSE button.");
+
+                pauseVideoIfPlaying();
+            }
         }
     }
 
-    private void pauseVideo() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.pause();
-            mPlayPauseImageButton.setTag(getResources().getString(R.string.play));
-            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_play);
+    private void playVideoIfNotPlaying() {
+        if (!mMediaPlayer.isPlaying()) {
+            Log.d(TAG, "Start PLAY process.");
+            // Change to play.
+            playVideo();
+        }
+    }
+
+    private void pauseVideoIfPlaying() {
+        if (mMediaPlayer.isPlaying()) {
+            Log.d(TAG, "Start PAUSE process.");
+            // Change to pause.
+            pauseVideo();
         }
     }
 
@@ -180,6 +176,14 @@ public class FixedAspectRatioActivity extends AppCompatActivity {
         playVideo();
     }
 
+    private void playVideo() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.start();
+            mPlayPauseImageButton.setTag(getResources().getString(R.string.pause));
+            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_pause);
+        }
+    }
+
     @Override
     protected void onPause() {
         Log.d(TAG, "Entered onPause().");
@@ -188,12 +192,22 @@ public class FixedAspectRatioActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    private void pauseVideo() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.pause();
+            mPlayPauseImageButton.setTag(getResources().getString(R.string.play));
+            mPlayPauseImageButton.setImageResource(android.R.drawable.ic_media_play);
+        }
+    }
+
     @Override
     protected void onStop() {
         Log.d(TAG, "Entered onStop().");
 
-        mMediaPlayer.reset();
-        mMediaPlayer = null;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
+            mMediaPlayer = null;
+        }
 
         super.onStop();
     }

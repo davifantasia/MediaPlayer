@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_margin"
             android:width="@dimen/button_width"
-            android:text="@string/fixed_aspect_ratio" />
+            android:text="@string/fixed_aspect_ratio"
+            android:onClick="onFixedAspectRatioButtonClicked" />
 
         <Button
             android:id="@+id/adaptive_aspect_ratio_button"
@@ -24,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_margin"
             android:width="@dimen/button_width"
-            android:text="@string/adaptive_aspect_ratio" />
+            android:text="@string/adaptive_aspect_ratio"
+            android:onClick="onAdaptiveAspectRatioButtonClicked" />
 
         <Button
             android:id="@+id/fixed_aspect_ratio_instagram_button"
@@ -32,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_margin"
             android:width="@dimen/button_width"
-            android:text="@string/fixed_aspect_ratio_intagram" />
+            android:text="@string/fixed_aspect_ratio_intagram"
+            android:onClick="onFixedAspectRatioInstagramButtonClicked" />
 
         <Button
             android:id="@+id/live_stream_button"
@@ -40,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_margin"
             android:width="@dimen/button_width"
-            android:text="@string/title_activity_live_stream" />
+            android:text="@string/title_activity_live_stream"
+            android:onClick="onLiveStreamButtonClicked" />
 
         <TextView
             android:id="@+id/description"
